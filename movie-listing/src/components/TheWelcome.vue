@@ -5,6 +5,13 @@ import ToolingIcon from "./icons/IconTooling.vue";
 import EcosystemIcon from "./icons/IconEcosystem.vue";
 import CommunityIcon from "./icons/IconCommunity.vue";
 import SupportIcon from "./icons/IconSupport.vue";
+import { useMovieApi } from "../services/movie";
+import { ref } from "@vue/reactivity";
+
+const title: string = ref("");
+const pages: number = ref(0);
+
+const { data, error } = useMovieApi(title.value, pages.value);
 </script>
 
 <template>
@@ -14,7 +21,7 @@ import SupportIcon from "./icons/IconSupport.vue";
     </template>
     <template #heading>Documentation</template>
 
-    Vue’s
+    Vue’s {{ data }}
     <a target="_blank" href="https://vuejs.org/">official documentation</a>
     provides you with all information you need to get started.
   </WelcomeItem>
