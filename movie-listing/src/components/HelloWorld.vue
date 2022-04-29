@@ -22,7 +22,7 @@
           <td>{{ item.imdbID }}</td>
           <td>{{ item.Title }}</td>
           <td>{{ item.Year }}</td>
-          <v-switch v-model="sw" :label="`Campaign Status`"></v-switch>
+          <v-switch v-model="sw"></v-switch>
         </tr>
       </tbody>
     </v-table>
