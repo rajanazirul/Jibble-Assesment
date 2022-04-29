@@ -1,5 +1,4 @@
 import { computed, ref, unref, watch } from "vue";
-import { useCookies } from "vue3-cookies";
 
 export interface Filter {
   title: string;
@@ -50,13 +49,18 @@ export function useMovieApi(filter: Filter) {
       .catch((err) => (error.value = err));
   }
 
-  const { cookies } = useCookies();
-  cookies.set("myCoookie", "abcdefg");
-
-  const my_cookie_value = cookies.get("myCoookie");
-  console.log(my_cookie_value);
-
-
   watch(filter, () => getData());
   return { movies, total_pages, error, getData, getDataPage };
+}
+
+export function useFavourite() {
+  const favourite = localStorage.getItem("favourite");
+  const data = favourite ? JSON.parse(favourite) : [];
+
+  function setFavourite(imdbID: string) {
+    data.push(imdbID);
+    localStorage.setItem("favourite", JSON.stringify(data));
+  }
+
+  return { favourite, setFavourite };
 }
