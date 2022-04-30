@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible"
+        content="IE=edge">
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1.0">
+  <link rel="icon"
+        href="/dahderma_logo.ico">
+  <title>#DahDerma</title>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+  <style type="text/css">
+    .requestProgress {
+      margin-top: 0px;
+      width: 100%;
+      height: 10px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to right, #007db6, #0091b2, #009c9e, #00a77e, #22b24c, #60b031, #a5b62e)
+    }
+
+    .bar {
+      position: fixed;
+      width: calc(100% * 2/7);
+      height: 100%;
+      display: flex;
+      animation: move 2s linear infinite;
+      background-color: white;
+    }
+
+    @keyframes move {
+      0% {
+        transform: translate(-100%, 0)
+      }
+
+      100% {
+        transform: translate(calc(7/2*100%), 0)
+      }
+    }
+  </style>
+</head>
+
+<body style="padding:0;margin:0;">
+  <noscript>
+    <strong>Welcome</strong>
+  </noscript>
+  <div id="app">
+		<div id="bodyLoading"
+				 class="requestProgress">
+			<div class="bar"></div>
+		</div>
+	</div>
+  <script type="module"
+          src="/src/main.ts"></script>
+  <!-- built files will be auto injected -->
+</body>
+
+</html>
