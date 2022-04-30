@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vite --mode development",
     "build:dev": "vite build --mode development",
-    "build:prod": "vite build --mode production"
+    "build:prod": "vite build --mode production",
+    "test:unit": "jest --config=jest.config.js "
   },
   "dependencies": {
     "@vue/composition-api": "^1.2.2",

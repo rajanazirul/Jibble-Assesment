@@ -1,12 +1,12 @@
-import { shallowMount } from '@vue/test-utils'
-import SignIn from '../../src/components/SignIn/SignIn.vue'
+import { shallowMount } from "@vue/test-utils";
+import HomeView from "@/HomeView.vue";
 
-describe('SignIn.vue', () => {
-  it('renders props.msg when passed', () => {
-    const msg = '#DahDerma Donation platform that you can trust'
-    const wrapper = shallowMount(SignIn, {
-      propsData: { msg }
-    })
-    expect(wrapper.text()).toContain(msg)
-  })
-})
+describe("HomeView.vue", () => {
+  it("renders props.msg when passed", () => {
+    const msg = "as";
+    const wrapper = shallowMount(HomeView, {
+      propsData: { msg },
+    });
+    expect(wrapper.text()).toContain(msg);
+  });
+});
