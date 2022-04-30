@@ -9,6 +9,6 @@ describe("SearchBar", () => {
     const wrapper = mount(HelloWorld, {
       props: { msg: "Hello Vitest" },
     });
-    expect(wrapper.text()).toContain(",");
+    expect(wrapper.text()).toContain("IMDBTitleYearFavouriteIMDBTitleYear");
   });
 });
