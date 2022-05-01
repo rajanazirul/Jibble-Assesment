@@ -44,7 +44,7 @@ export function useMovieApi(filter: Filter) {
 
   async function getData() {
     await fetch(
-      `https://jsonmock.hackerrank.com/api/movies/search/?Title=${filter.title}`
+      `https://jsonmock.hackerrank.com/api/movies/search/?Title=${filter.title}`,
     )
       .then((res) => res.json())
       .then((json) => (datas.value = json))
@@ -53,15 +53,14 @@ export function useMovieApi(filter: Filter) {
 
   async function getDataPage() {
     await fetch(
-      `https://jsonmock.hackerrank.com/api/movies/search/?Title=${filter.title}&page=${filter.pages}`
+      `https://jsonmock.hackerrank.com/api/movies/search/?Title=${filter.title}&page=${filter.pages}`,
     )
       .then((res) => res.json())
       .then((json) => (datas.value = json))
       .catch((err) => (error.value = err));
   }
 
-  watch(filter, () => getData());
-  return { movies, total_pages, error, getData, getDataPage };
+  return { datas, movies, total_pages, error, getData, getDataPage };
 }
 
 export function useFavourite() {
@@ -69,18 +68,18 @@ export function useFavourite() {
   const favouriteData = favourite ? JSON.parse(favourite) : [];
   const error = ref(null);
 
-  function setFavourite(imdbID: string) {
+  async function setFavourite(imdbID: string) {
     const index = favouriteData.indexOf(imdbID);
     if (index == -1) {
-      favouriteData.push(imdbID);
+      await favouriteData.push(imdbID);
     }
     localStorage.setItem("favourite", JSON.stringify(favouriteData));
   }
 
-  function removeFavourite(imdbID: string) {
+  async function removeFavourite(imdbID: string) {
     const index = favouriteData.indexOf(imdbID);
     if (index > -1) {
-      favouriteData.splice(index, 1);
+      await favouriteData.splice(index, 1);
     }
     localStorage.setItem("favourite", JSON.stringify(favouriteData));
   }
@@ -89,7 +88,7 @@ export function useFavourite() {
     const favouriteList = ref<Array<object>>([]);
     favouriteData.forEach(async (element: string) => {
       await fetch(
-        `https://jsonmock.hackerrank.com/api/movies/search/?imdbID=${element}`
+        `https://jsonmock.hackerrank.com/api/movies/search/?imdbID=${element}`,
       )
         .then((res) => res.json())
         .then((json: Info) => {
