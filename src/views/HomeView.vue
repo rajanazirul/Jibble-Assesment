@@ -1,9 +1,7 @@
 <template>
-  <hello-world />
+  <movie-list />
 </template>
 
 <script setup lang="ts">
-// import SearchBar from "../components/SearchBar.vue";
-import HelloWorld from "../components/HelloWorld.vue";
-// import TableRenderer from "../components/TableRenderer.vue";
+import MovieList from "../components/MovieList.vue";
 </script>
