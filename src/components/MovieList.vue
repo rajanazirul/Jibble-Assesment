@@ -1,19 +1,31 @@
 <template>
   <div id="table" class="col-sm-12">
     <div class="offset">
+      <div>
+        <search-bar @submit="submit" />
+      </div>
       <table class="table">
         <thead>
           <tr>
-            <th class="text-left">IMDB</th>
+            <th data-test="movies" class="text-left">IMDB</th>
             <th class="text-left">Title</th>
             <th class="text-left">Year</th>
+            <th class="text-left">Favourite</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="items in movies" :key="items.imdbID" data-test="movies">
+          <tr v-for="items in status" :key="items.imdbID">
             <td>{{ items.imdbID }}</td>
             <td>{{ items.Title }}</td>
             <td>{{ items.Year }}</td>
+            <td>
+              <favourite-button
+                :item="items"
+                :filter="filter"
+                @add="add(items)"
+                @remove="remove(items.imdbID)"
+              />
+            </td>
           </tr>
         </tbody>
       </table>
@@ -34,13 +46,28 @@
 import { onMounted } from "@vue/runtime-core";
 import useMovieState from "../store/useMovieState";
 import TablePagination from "./TablePagination.vue";
+import SearchBar from "./SearchBar.vue";
+import FavouriteButton from "./FavouriteButton.vue";
+import useFavouriteState from "../store/useFavouriteState";
 
-const { getMovies, getMoviesList, fetchMovies, getFilter, onPageChange } =
+const { getMovies, fetchMovies, getFilter, onPageChange, submit, getStatus } =
   useMovieState();
 
-const movies = getMoviesList();
+const { addFavourite, removeFavourite } = useFavouriteState();
+
 const filter = getFilter();
 const pages = getMovies();
+const status = getStatus();
+
+function add(data: object) {
+  addFavourite(data);
+  fetchMovies();
+}
+
+function remove(imdbID: string) {
+  removeFavourite(imdbID);
+  fetchMovies();
+}
 
 onMounted(fetchMovies());
 </script>
