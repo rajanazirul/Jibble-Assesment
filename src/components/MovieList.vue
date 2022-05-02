@@ -1,4 +1,6 @@
 <template>
+  <search-bar @submit="submitSearch" />
+  {{ filter }}
   <div>
     <div class="container">
       <div class="search-box">
@@ -46,7 +48,7 @@
     </div>
 
     <table-pagination
-      :totalPages="total_pages"
+      :totalPages="total_pages || 1"
       :currentPage="filter.pages"
       :maxVisibleButtons="10"
       @pagechanged="onPageChange"
@@ -95,6 +97,7 @@ import { computed, onMounted, watch } from "vue";
 import { useMovieApi, Filter, useFavourite, Movies } from "../services/movie";
 import TablePagination from "./TablePagination.vue";
 import FavouriteButton from "./FavouriteButton.vue";
+import SearchBar from "./SearchBar.vue";
 
 const filter = reactive<Filter>({
   title: "",
@@ -118,6 +121,10 @@ function onPageChange(page: number) {
 
 function submit() {
   getData();
+}
+
+function submitSearch(v: Filter) {
+  filter.title = v.title;
 }
 
 function add(imdbID: string) {
