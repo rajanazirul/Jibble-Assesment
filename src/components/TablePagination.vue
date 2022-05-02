@@ -7,7 +7,7 @@
         v-if="props.currentPage != 1"
         class="page-link"
       >
-        First
+        <p>First</p>
       </button>
     </li>
 
@@ -18,20 +18,22 @@
         v-if="props.currentPage != 1"
         class="page-link"
       >
-        Previous
+        <p>Previous</p>
       </button>
     </li>
 
     <!-- Visible Buttons Start -->
     <li v-for="page in pages" :key="page.name" class="pagination-item">
-      <button
-        type="button"
-        @click="onClickPage(page.name)"
-        :disabled="page.isDisabled"
-        class="page-link"
-      >
-        {{ page.name }}
-      </button>
+      <div>
+        <button
+          type="button"
+          @click="onClickPage(page.name)"
+          class="page-link"
+          data-test="pagination"
+        >
+          <p>{{ page.name }}</p>
+        </button>
+      </div>
     </li>
 
     <!-- Visible Buttons End -->
@@ -42,7 +44,7 @@
         :disabled="isInLastPage"
         class="page-link"
       >
-        Next {{ props.total_pages }}
+        <p>Next {{ props.total_pages }}</p>
       </button>
     </li>
 
@@ -53,7 +55,7 @@
         v-if="props.currentPage !== props.totalPages"
         class="page-link"
       >
-        Last
+        <p>Last</p>
       </button>
     </li>
   </ul>

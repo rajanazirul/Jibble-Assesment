@@ -1,29 +1,39 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import MovieList from "../MovieList.vue";
+import TablePagination from "../TablePagination.vue";
 import { mount, shallowMount } from "@vue/test-utils";
-import TableRenderer from "../TableRenderer.vue";
+import { nextTick } from "vue";
 
-// it test click search, output object
-// it test click pagination, output object
-// it test setfavourite, output object
-// it test removeFavourite, output object
+/** 
+1. Should render movie, title, year and imdbId
+2. Should change page when click pagination
+3. should search movie when click
+4. should add favourite to store when click
+5. should delete favourite when click
+*/
 
 describe("MovieList", () => {
-  it("Test seach", () => {
+  it("Should render movie, title, year and imdbId", () => {
     const wrapper = mount(MovieList);
-    const input = wrapper.find("input");
-    input.setValue("Waterworld");
-    wrapper.find("button").trigger("click");
-    expect(wrapper.emitted()).toBe("");
+    const movies = wrapper.get('[data-test="movies"]');
+    expect(movies.text()).toBe('tt0114898Waterworld1995');
   });
 
-  it("Test Computed Properties", async () => {
-    const wrapper = shallowMount(TableRenderer, {
+  it("Should emit page number when click button", async () => {
+    const wrapper = mount(TablePagination, {
       props: {
-        title: `as`,
-        pages: 0,
+        totalPages: 10,
+        currentPage: 1,
+        maxVisibleButtons: 10,
       },
     });
-    expect(wrapper.text()).toBe("[]");
+    const button = wrapper.find('[data-test="pagination"]');
+    await button.trigger("click");
+    await nextTick();
+    // expect(wrapper.text()).toContain('First');
+    // expect(wrapper.emitted()).toHaveProperty('increment')
+    const changeEvent = wrapper.emitted('pagechanged');
+    expect(changeEvent[0]).toEqual([1]);
   });
+
 });

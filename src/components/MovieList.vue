@@ -1,151 +1,48 @@
 <template>
-  <search-bar @submit="submitSearch" />
-  {{ filter }}
-  <div>
-    <div class="container">
-      <div class="search-box">
-        <input
-          type="text"
-          class="search-input"
-          placeholder="Search.."
-          v-model="filter.title"
+  <div id="table" class="col-sm-12">
+    <div class="offset">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-left">IMDB</th>
+            <th class="text-left">Title</th>
+            <th class="text-left">Year</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="items in movies" :key="items.imdbID" data-test="movies">
+            <td>{{ items.imdbID }}</td>
+            <td>{{ items.Title }}</td>
+            <td>{{ items.Year }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div>
+        <table-pagination
+          :totalPages="pages.total_pages || 1"
+          :currentPage="filter.pages"
+          :maxVisibleButtons="10"
+          @pagechanged="onPageChange"
         />
-
-        <button class="search-button" @click="submit()">
-          <i class="mdi mdi-magnify search-icon"></i>
-        </button>
-      </div>
-    </div>
-
-    <div id="table" class="col-sm-12">
-      <div class="offset">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>User ID</th>
-              <th>Favourite</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="p in movies" :key="p.imdbID">
-              <td>{{ p.imdbID }}</td>
-              <td>{{ p.Title }}</td>
-              <td>{{ p.Year }}</td>
-              <td>
-                <favourite-button
-                  :item="p"
-                  :filter="filter"
-                  @add="add(p.imdbID)"
-                  @remove="remove(p.imdbID)"
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <table-pagination
-      :totalPages="total_pages || 1"
-      :currentPage="filter.pages"
-      :maxVisibleButtons="10"
-      @pagechanged="onPageChange"
-    />
-
-    <div id="table" class="col-sm-12">
-      <div class="offset">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th class="text-left">IMDB</th>
-              <th class="text-left">Title</th>
-              <th class="text-left">Year</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="items in favouriteName" :key="items.imdbID">
-              <td>{{ items.imdbID }}</td>
-              <td>{{ items.Title }}</td>
-              <td>{{ items.Year }}</td>
-              <td>
-                <button
-                  class="icon"
-                  type="button"
-                  @click="
-                    () => {
-                      removeFavourite(items.imdbID);
-                      getDataPage();
-                    }
-                  "
-                >
-                  <i class="mdi mdi-delete"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, unref } from "@vue/reactivity";
-import { computed, onMounted, watch } from "vue";
-import { useMovieApi, Filter, useFavourite, Movies } from "../services/movie";
+import { onMounted } from "@vue/runtime-core";
+import useMovieState from "../store/useMovieState";
 import TablePagination from "./TablePagination.vue";
-import FavouriteButton from "./FavouriteButton.vue";
-import SearchBar from "./SearchBar.vue";
 
-const filter = reactive<Filter>({
-  title: "",
-  pages: 1,
-});
+const { getMovies, getMoviesList, fetchMovies, getFilter, onPageChange } =
+  useMovieState();
 
-const favouriteLists = ref<Array<Movies>>();
+const movies = getMoviesList();
+const filter = getFilter();
+const pages = getMovies();
 
-const favouriteName = computed(() => {
-  const v = unref<Array<Movies>>(favouriteLists);
-  return v;
-});
-
-const { movies, total_pages, getData, getDataPage } = useMovieApi(filter);
-const { setFavourite, removeFavourite, getDataFavourite } = useFavourite();
-
-function onPageChange(page: number) {
-  filter.pages = page;
-  getDataPage();
-}
-
-function submit() {
-  getData();
-}
-
-function submitSearch(v: Filter) {
-  filter.title = v.title;
-}
-
-function add(imdbID: string) {
-  setFavourite(imdbID);
-  getDataPage();
-}
-
-function remove(imdbID: string) {
-  removeFavourite(imdbID);
-  getDataPage();
-}
-
-watch(
-  movies,
-  () => getDataFavourite().then((res) => (favouriteLists.value = res)),
-  {
-    immediate: true,
-  },
-);
-
-onMounted(getData());
+onMounted(fetchMovies());
 </script>
 
 <style scoped>
