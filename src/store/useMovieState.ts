@@ -1,4 +1,6 @@
-import { computed, reactive, readonly } from "vue";
+import { useFavourite } from "@/services/movie";
+import { computed, reactive, readonly, unref } from "vue";
+import useFavouriteState from "../store/useFavouriteState";
 
 export interface Movies {
   Title: string;
@@ -19,12 +21,18 @@ export interface Filter {
   pages: number;
 }
 
-const defaultState = {
+export interface MovieState {
+  movies: Info;
+  filter: Filter;
+  error: string;
+}
+
+const defaultState: MovieState = {
   movies: {
-    page: 0,
-    per_page: 0,
-    total_pages: 0,
-    data: [{ "Title": "Waterworld", "Year": 1995, "imdbID": "tt0114898" }]
+    page: 1,
+    per_page: 1,
+    total_pages: 1,
+    data: [],
   },
 
   filter: {
@@ -49,6 +57,22 @@ const getters = {
   getFilter: () => {
     return computed(() => state.filter);
   },
+
+  getStatus: () => {
+    return computed(() => {
+      const { getFavourite } = useFavouriteState();
+      const favouriteData = unref(getFavourite());
+      const movieData = state.movies.data || [];
+      movieData.map((element) => {
+        favouriteData.filter((i) => {
+          if (i.imdbID === element.imdbID) {
+            element.status = true;
+          }
+        });
+      });
+      return movieData;
+    });
+  },
 };
 
 const actions = {
@@ -66,6 +90,10 @@ const actions = {
     await actions.fetchMovies();
   },
 
+  submit: async (title: string) => {
+    state.filter.title = title;
+    await actions.fetchMovies();
+  },
 };
 
 export default () => ({
