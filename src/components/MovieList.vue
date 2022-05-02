@@ -1,10 +1,10 @@
 <template>
   <div id="table" class="col-sm-12">
-    <div class="offset">
+    <div class="offset" id="search">
       <div>
         <search-bar @submit="submit" />
       </div>
-      <table class="table">
+      <table class="table" id="movies">
         <thead>
           <tr>
             <th data-test="movies" class="text-left">IMDB</th>
@@ -30,13 +30,47 @@
         </tbody>
       </table>
 
-      <div>
+      <div id="page">
         <table-pagination
           :totalPages="pages.total_pages || 1"
           :currentPage="filter.pages"
           :maxVisibleButtons="10"
           @pagechanged="onPageChange"
         />
+      </div>
+
+      <div class="offset">
+        <h1>Favourite Table</h1>
+        <table class="table">
+          <thead>
+            <tr>
+              <th class="text-left">IMDB</th>
+              <th class="text-left">Title</th>
+              <th class="text-left">Year</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="items in favourite" :key="items.imdbID">
+              <td>{{ items.imdbID }}</td>
+              <td>{{ items.Title }}</td>
+              <td>{{ items.Year }}</td>
+              <td>
+                <button
+                  class="icon"
+                  type="button"
+                  @click="
+                    () => {
+                      removeFavourite(items.imdbID);
+                      getDataPage();
+                    }
+                  "
+                >
+                  <i class="mdi mdi-delete"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -53,11 +87,12 @@ import useFavouriteState from "../store/useFavouriteState";
 const { getMovies, fetchMovies, getFilter, onPageChange, submit, getStatus } =
   useMovieState();
 
-const { addFavourite, removeFavourite } = useFavouriteState();
+const { addFavourite, removeFavourite, getFavourite } = useFavouriteState();
 
 const filter = getFilter();
 const pages = getMovies();
 const status = getStatus();
+const favourite = getFavourite();
 
 function add(data: object) {
   addFavourite(data);
@@ -73,35 +108,6 @@ onMounted(fetchMovies());
 </script>
 
 <style scoped>
-.search-box {
-  width: 100%;
-  position: relative;
-  display: flex;
-}
-.search-input {
-  width: 100%;
-  padding: 10px;
-  border: 4px solid #111d5e;
-  border-radius: 10px 0 0 10px;
-  border-right: none;
-  outline: none;
-  font-size: 20px;
-  color: tomato;
-  background: none;
-}
-.search-button {
-  text-align: center;
-  height: 61px;
-  width: 40px;
-  outline: none;
-  cursor: pointer;
-  border: 4px solid #111d5e;
-  border-radius: 0 10px 10px 0;
-  border-left: none;
-  background: none;
-  font-size: 20px;
-  border-left: 4px solid #111d5e;
-}
 .container {
   width: 100%;
   position: relative;
