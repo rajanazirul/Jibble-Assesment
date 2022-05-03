@@ -39,7 +39,7 @@
         />
       </div>
 
-      <div class="offset">
+      <div class="offset" id="favourite">
         <h1>Favourite Table</h1>
         <table class="table">
           <thead>
